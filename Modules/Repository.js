@@ -24,7 +24,7 @@ function Entity(name, type, description, atr_lynks = []) {
     this.atr_lynks = atr_lynks;
 }
 Entity.counter = 0;
-Entity.prototype.Get_ID = function () {
+Entity.prototype.getId = function () {
     return this.picture_id;
 }
 
@@ -45,7 +45,7 @@ function Attributes(name, entId, type, domain, descp, mig_id = null, mig_type = 
     this.mig_type = mig_type;
 }
 Attributes.counter = 0;
-Attributes.prototype.Get_ID = function () {
+Attributes.prototype.getId = function () {
     return this.id;
 }
 Relationship.counter = 0;
@@ -67,7 +67,7 @@ function Relationship(description, parentId, childId, type, phrase, conn) {
 }
 
 
-Relationship.prototype.Get_ID = function () {
+Relationship.prototype.getId = function () {
     return this._id;
 }
 Relationship.prototype.Get_Parent_ID = function () {
@@ -93,7 +93,7 @@ function KeyGroup(nameKg, entId, typeKg) {
     //Òèï ãðóïïû
     this.type_kg = typeKg;
 }
-KeyGroup.prototype.Get_ID = function () {
+KeyGroup.prototype.getId = function () {
     return this.id;
 }
 KeyGroup.counter = 0;
@@ -105,7 +105,7 @@ function Component(nameKg, attributeId) {
     //Èä àòðèáóòà
     this.atr_id = attributeId;
 }
-Component.prototype.Get_ID = function () {
+Component.prototype.getId = function () {
     return this.id;
 }
 Component.counter = 0;
@@ -143,7 +143,7 @@ Repository.prototype.Add_Attribute = function (name, idEnt, type, domainName,des
 
 
     //Ñóùíîñòü ê êîòîðîé äîáàâëÿåòñÿ Àòðèáóò
-    var curEntity = this.list_ent.searchEntityById(idEnt);
+    var curEntity = this.list_ent.searchById(idEnt);
 
     //Ññûëêà íà ñîçäàííûé îáúåêò Àòðèáóò
     var linkAtr = this.list_atr.add(new Attributes(name, idEnt, type, domainName,description,mig_id,mig_type)).data;
@@ -156,19 +156,18 @@ Repository.prototype.Add_Attribute = function (name, idEnt, type, domainName,des
     if (linkAtr.type == PRIMARY_KEY) {
         for (var i = 1; i <= this.list_rel._length; i++) {
             if (this.list_rel.searchNodeAt(i)._parent_id === idEnt) {
-                var tmpChildEnt = this.list_ent.searchEntityById(this.list_rel.searchNodeAt(i)._child_id);
+                var tmpChildEnt = this.list_ent.searchById(this.list_rel.searchNodeAt(i)._child_id);
                 tmpChildEnt.atr_lynks.push(linkAtr);
             }
         }
     }
-    console.log(this.list_atr);
     return linkAtr.id;
 
 };
 
 Repository.prototype.Edit_Attribute= function (idAtr,name,type,domainName,description) {
-    var atrToEdit = this.list_atr.searchEntityById(idAtr);
-    var ownerEnt = this.list_ent.searchEntityById(atrToEdit._owner_id);
+    var atrToEdit = this.list_atr.searchById(idAtr);
+    var ownerEnt = this.list_ent.searchById(atrToEdit._owner_id);
  
     atrToEdit.name=name;
     atrToEdit.type=type;
@@ -190,10 +189,10 @@ Repository.prototype.Edit_Attribute= function (idAtr,name,type,domainName,descri
 Repository.prototype.Delete_Attribute = function (idAtr) {
 
     //Àòðèáóò äëÿ óäàëåíèÿ
-    var atrToDelete = this.list_atr.searchEntityById(idAtr);
+    var atrToDelete = this.list_atr.searchById(idAtr);
 
     // Ñóùíîñòü-âëàäåëåö àòðèáóòà
-    var ownerEnt = this.list_ent.searchEntityById(atrToDelete._owner_id);
+    var ownerEnt = this.list_ent.searchById(atrToDelete._owner_id);
 
     var i;
     //Óäàëåíèå àòðèáóòà èç ñóùíîñòåé ó êîòîðûõ åñòü ñâÿçè ñ òåêóùåé
@@ -234,15 +233,15 @@ Repository.prototype.Add_Relationship = function (desription, parentId, childId,
 Repository.prototype.Add_RelationshipKB = function (name, parentId, childId, type, phrase, conn) {
 
     //Ñóùíîñòü-ðîäèòåëü
-    var entParent = this.list_ent.searchEntityById(parentId);
+    var entParent = this.list_ent.searchById(parentId);
 
     //Ñóùíîñòü-ïîòîìîê
-    var objChild = this.list_ent.searchEntityById(childId);
+    var objChild = this.list_ent.searchById(childId);
 
 
     for (var i = 0; i < entParent.atr_lynks.length; i++) {
         if (entParent.atr_lynks[i].type == PRIMARY_KEY || entParent.atr_lynks[i].type == ALT_KEY) {           
-            var temp = this.list_atr.searchEntityById(entParent.atr_lynks[i].id);
+            var temp = this.list_atr.searchById(entParent.atr_lynks[i].id);
             //temp.type="FK";
             this.Add_Group('G' + temp.type+childId, childId, temp.type,temp.id);
             objChild.atr_lynks.push(temp);
@@ -255,14 +254,14 @@ Repository.prototype.Add_RelationshipKB = function (name, parentId, childId, typ
 Repository.prototype.Add_RelationshipKB = function (name, parentId, childId, type, phrase, conn) {
 
     //Ñóùíîñòü-ðîäèòåëü
-    var entParent = this.list_ent.searchEntityById(parentId);
+    var entParent = this.list_ent.searchById(parentId);
     //Ñóùíîñòü-ïîòîìîê
-    var objChild = this.list_ent.searchEntityById(childId);
+    var objChild = this.list_ent.searchById(childId);
     switch(type){
      case IDEN_REL :
         for (var i = 0; i < entParent.atr_lynks.length; i++) {
         if (entParent.atr_lynks[i].type == PRIMARY_KEY) {           
-            var temp = this.list_atr.searchEntityById(entParent.atr_lynks[i].id);
+            var temp = this.list_atr.searchById(entParent.atr_lynks[i].id);
             var linkAtr = this.list_atr.add(new Attributes(temp.name, temp._owner_id, temp.type, temp.domainName, temp.description)).data;
             linkAtr.mig_id = temp.id;
             linkAtr.mig_type = IDEN_REL;
@@ -274,7 +273,7 @@ Repository.prototype.Add_RelationshipKB = function (name, parentId, childId, typ
      case NON_IDEN_REL :
      for (var i = 0; i < entParent.atr_lynks.length; i++) {
         if (entParent.atr_lynks[i].type == PRIMARY_KEY && entParent.atr_lynks[i]._owner_id == parentId) {           
-            var temp = this.list_atr.searchEntityById(entParent.atr_lynks[i].id);
+            var temp = this.list_atr.searchById(entParent.atr_lynks[i].id);
             var linkAtr = this.list_atr.add(new Attributes(temp.name, temp._owner_id, "FK", temp.domainName, temp.description)).data;
             linkAtr.mig_id = temp.id;
             linkAtr.mig_type = NON_IDEN_REL;
@@ -288,8 +287,8 @@ Repository.prototype.Add_RelationshipKB = function (name, parentId, childId, typ
 };
 /*Óäàëåíèå îòíîøåíèÿ*/
 Repository.prototype.Delete_Relationship = function (idRel) {
-    var relationToDelete = this.list_rel.searchEntityById(idRel);
-    var objChildEnt = this.list_ent.searchEntityById(relationToDelete._child_id);
+    var relationToDelete = this.list_rel.searchById(idRel);
+    var objChildEnt = this.list_ent.searchById(relationToDelete._child_id);
 
     //Óäàëåíèå âíåøíèõ êëþ÷åé
     if (objChildEnt.atr_lynks.length !== 0) {
@@ -307,28 +306,28 @@ Repository.prototype.Delete_Relationship = function (idRel) {
 /*Ðåäàêòèðîâàíèå îòíîøåíèÿ*/
 Repository.prototype.Edit_Relationship = function (idRel, newDescription, newPhrase, newType=null) {
     
-    /*if(type!=null && type != this.list_rel.searchEntityById(idRel).type)
+    /*if(type!=null && type != this.list_rel.searchById(idRel).type)
     {
-        var pId = this.list_rel.searchEntityById(idRel)._parent_id;
-        var cldId = this.list_rel.searchEntityById(idRel)._child_id;       
+        var pId = this.list_rel.searchById(idRel)._parent_id;
+        var cldId = this.list_rel.searchById(idRel)._child_id;       
         this.Delete_Relationship(idRel);
         //this.Add_RelationshipKB(pId,cldId,newPhrase,newType,newDescription);
         return;
     }*/
-    this.list_rel.searchEntityById(idRel).description = newDescription;
-    this.list_rel.searchEntityById(idRel).phrase = newPhrase;
+    this.list_rel.searchById(idRel).description = newDescription;
+    this.list_rel.searchById(idRel).phrase = newPhrase;
 };
 /*Ðåäàêòèðîâàíèå ñóùíîñòè*/
 Repository.prototype.Edit_Entity = function (idEnt, newName, newDescription) {
-    this.list_ent.searchEntityById(idEnt).name = newName;
-    this.list_ent.searchEntityById(idEnt).description = newDescription;
+    this.list_ent.searchById(idEnt).name = newName;
+    this.list_ent.searchById(idEnt).description = newDescription;
 };
 /*Óäàëåíèå ñóùíîñòè*/
 Repository.prototype.Delete_Entity = function (idEnt) {
 
     //Ìàññèâ id-øíèêîâ ñâÿçåé
     var idRelToDelete = [];
-    var tmpEnt = this.list_ent.searchEntityById(idEnt);
+    var tmpEnt = this.list_ent.searchById(idEnt);
     var i;
     //Ïðîâåðêà íà íàëè÷èå ñâÿçåé ó óäàëÿåìîé ñóùíîñòè
     if (this.list_rel._length === 1) {
@@ -348,7 +347,7 @@ Repository.prototype.Delete_Entity = function (idEnt) {
     for (i = 1; i <= this.list_keygroup._length; i++) {
         var groupToDeleteId = this.list_keygroup.searchNodeAt(i).ent_id;
         if (groupToDeleteId == idEnt)
-            this.Delete_Group(this.list_keygroup.searchNodeAt(i).Get_ID());
+            this.Delete_Group(this.list_keygroup.searchNodeAt(i).getId());
     }
     //Óäàëåíèå âñåõ ññûëîê íà àòðèáóòû
     for (i = 0; i < tmpEnt.atr_lynks.length; i++) {
@@ -388,7 +387,7 @@ Repository.prototype.Add_Component = function (nameKg, attributeId) {
 }
 /*Óäàëåíèå ãðóïïû*/
 Repository.prototype.Delete_Group = function (idGroup) {
-    var groupToDelete = this.list_keygroup.searchEntityById(idGroup);
+    var groupToDelete = this.list_keygroup.searchById(idGroup);
     for (var i = 1; i <= this.list_comp._length; i++) {
         if (this.list_comp.searchNodeAt(i).name_kg === groupToDelete.name_kg)
             this.list_comp.remove(this.list_comp.searchNodeAt(i).id);

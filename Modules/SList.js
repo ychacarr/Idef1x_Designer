@@ -48,7 +48,7 @@ SinglyList.prototype.searchNodeAt = function (position) {
         return currentNode.data;
        
             };
-SinglyList.prototype.searchEntityById = function (ent_id) {
+SinglyList.prototype.searchById = function (ent_id) {
         var currentNode = this.head,
             length = this._length,
             count = 1,
@@ -58,7 +58,7 @@ SinglyList.prototype.searchEntityById = function (ent_id) {
             throw new Error(message.failure);
         }
         while (count <= length) {
-            if (currentNode.data.Get_ID()==ent_id)
+            if (currentNode.data.getId()==ent_id)
                 break;
         else
             if(count == length){
@@ -80,7 +80,7 @@ SinglyList.prototype.remove = function (id) {
             deletedNode = null;
 
         while (count < length) {
-            if(currentNode.data.Get_ID()==id)
+            if(currentNode.data.getId()==id)
             {
                 if (count+1 == 1) {
                     this.head = currentNode.next;
