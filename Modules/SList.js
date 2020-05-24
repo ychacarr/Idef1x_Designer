@@ -1,12 +1,12 @@
-﻿function Node(data) {
+﻿function Node(data) { // Объект элемента списка
     this.data = data;
     this.next = null;
 }
-function SinglyList() {
+function SinglyList() {  // Объект односвязного списка
     this._length = 0;
     this.head = null;
 }
-SinglyList.prototype.add = function (value) {
+SinglyList.prototype.add = function (value) { // Добавляет элемент в список
         var node = new Node(value),
             currentNode = this.head;
 
@@ -29,7 +29,7 @@ SinglyList.prototype.add = function (value) {
 
         return node;
     };
-SinglyList.prototype.searchNodeAt = function (position) {
+SinglyList.prototype.searchNodeAt = function (position) { // Находит элемент в списке
         var currentNode = this.head,
             length = this._length,
             count = 1,
@@ -48,7 +48,7 @@ SinglyList.prototype.searchNodeAt = function (position) {
         return currentNode.data;
        
             };
-SinglyList.prototype.searchById = function (ent_id) {
+SinglyList.prototype.searchById = function (ent_id) { // Поиск элемента по ID
         var currentNode = this.head,
             length = this._length,
             count = 1,
@@ -70,7 +70,7 @@ SinglyList.prototype.searchById = function (ent_id) {
 
         return currentNode.data;
             };
-SinglyList.prototype.remove = function (id) {
+SinglyList.prototype.remove = function (id) { // Удалить элемент
         var currentNode = this.head,
             length = this._length,
             count = 0,
