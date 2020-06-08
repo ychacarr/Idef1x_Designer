@@ -105,6 +105,7 @@ var _Repository = (function() {
     }   
     return linkAtr.getId();
     },
+    //добавление атрибута после загрузки
     Add_Attribute_AfterLoad: function(name, idEnt, type, domainName,description, mig_id, mig_type){
         list_atr.push(new Attributes(name, idEnt, type, domainName,description,mig_id,mig_type));
         list_ent.filter(function(item){
@@ -112,6 +113,7 @@ var _Repository = (function() {
         })[0].atr_lynks.push(list_atr[list_atr.length-1]);
         return list_atr[list_atr.length-1].getId();
     },
+    //редактирование атрибута
     Edit_Attribute: function (idAtr,name,type,domainName,description) {
     var atrToEdit = list_atr.filter(p => p.getId() == idAtr)[0];
     var ownerEnt = list_ent.filter(p => p.getId() == atrToEdit.getOwnerId())[0];
@@ -131,9 +133,10 @@ var _Repository = (function() {
         }
     }
     },
+    // удаление атрибутов
     Delete_Attribute: function (idAtr,mode) {
 
-    //Àòðèáóò äëÿ óäàëåíèÿ
+    //ищем что надо удалить
     
     var atrToDelete = list_atr.filter(p => p.getId() == idAtr)[0];
     
@@ -143,6 +146,7 @@ var _Repository = (function() {
 
     if(mode == 0 || mode == null){
         for(var i = 0;i < list_ent.length;i++){
+            // удаляем все связи элемента
             list_ent[i].atr_lynks = list_ent[i].atr_lynks.filter(p => p.getMigrationId() != ownerEnt.getId());
             
         }
@@ -150,8 +154,11 @@ var _Repository = (function() {
     ownerEnt.atr_lynks = ownerEnt.atr_lynks.filter(p => p.getId() != idAtr);
     list_atr = list_atr.filter(p => p.getMigrationId() != ownerEnt.getId());
     list_atr = list_atr.filter(p => p.getId() != idAtr);
+    //сохраняем изменения
     this.reloadAtrTable(list_atr);
+
     },
+    //добавление отношений
     Add_Relationship: function (desription, parentId, childId, type, phrase, conn) {
     list_rel.push(new Relationship(desription, parentId, childId, type, phrase, conn));
     },
@@ -207,6 +214,7 @@ var _Repository = (function() {
     }
     list_rel.push(new Relationship(name, parentId, childId, type, phrase, conn));
     },
+    //удаление отношений
     Delete_Relationship: function (idRel, mode) {
     var relationToDelete = list_rel.filter(p =>p.getId() == idRel)[0];
     var objChildEnt = list_ent.filter(p =>p.getId() == relationToDelete.Get_Child_ID())[0];
@@ -279,6 +287,7 @@ var _Repository = (function() {
     list_ent.remove(idEnt);
 
 },
+// добавить группу
     Add_Group: function (nameKg, entId, typeKg,atrId) {
     
     var isOldGroup = false;
@@ -309,6 +318,7 @@ var _Repository = (function() {
     list_keygroup.remove(idGroup);
 
     },
+
     Clear: function(){
         list_ent = null;
         list_atr = null;
@@ -321,6 +331,7 @@ var _Repository = (function() {
         list_comp = new SinglyList();
         slist_keygroup = new SinglyList();
     },
+    //выбираем имя
     ValidateName: function(name, objType){
         var check = false;
         switch(objType)
@@ -333,10 +344,12 @@ var _Repository = (function() {
         }
         return check;
     },
+    //добавляем категорию
     Add_CategoryCluster: function(parent,child){
         list_categoryCluster.push(new CategoryCluster(parent,child));
         return list_categoryCluster[list_categoryCluster.length-1];
     },
+    //перезагрузка lfyys[] 
     reloadAtrTable(attr){
         _Repository.listAtr = attr;
     }

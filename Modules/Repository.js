@@ -10,17 +10,17 @@ var NON_IDEN_REL = 'Non-identificate';
 var MANY_TO_MANY = 'Many-to-many';
 
 function Entity(name, type, description, atr_lynks = []) {
-    //Èä îáúåêòà
+    //Ид объекта
     this.id = Entity.counter++;
-    //Èìÿ ñóùíîñòè
+    //Имя сущности
     this.name = name;
-    //Èä ãðàôè÷. îáúåêòà
+    //Ид графич. объекта
     this.picture_id = "Entity" + this.id;
-    //Òèï ñóùíîñòè
+    //Тип сущности
     this.type = type;
-    //Îïèñàíèå ñóùíîñòè
+    //Описание сущности
     this.description = description;
-    //Ìàññèâ ññûëîê íà àòðèáóòû ñóùíîñòè
+    //Массив ссылок на атрибуты сущности
     this.atr_lynks = atr_lynks;
 }
 Entity.counter = 0;
@@ -29,15 +29,15 @@ Entity.prototype.getId = function () {
 }
 
 function Attributes(name, entId, type, domain, descp, mig_id = null, mig_type = null) {
-    //Èä àòðèáóòà
+    //Ид атрибута
     this.id = Attributes.counter++;
-    //Èä âëàäåëüöà àòðèáóòà
+    //Ид владельца атрибута
     this._owner_id = entId;
-    //Òèï àòðèáóòà (PK,FK,AK)
+    // Тип атрибута(PK,FK,AK)
     this.type = type;
-    //Èìÿ àòðèáóòà
+    //Имя атрибута
     this.name = name;
-    //Äîìåí àòð
+    //Домен атр
     this.domainName = domain;
 
     this.description = descp;
@@ -50,19 +50,19 @@ Attributes.prototype.getId = function () {
 }
 Relationship.counter = 0;
 function Relationship(description, parentId, childId, type, phrase, conn) {
-    //Èä ñâÿçè
+    //Id связи
     this._id = "R" + Relationship.counter++;
-    //Îïèñàíèå ñâÿçè
+    //Описание связи
     this.description = description;
     //Èä ðîä. ñóùíîñòè
     this._parent_id = parentId;
-    //Èä äî÷. ñóùíîñòè
+    //ID доч. сущности
     this._child_id = childId;
-    //Òèï ñâÿçè
+    //Тип связи
     this.type = type;
-    //Ãëàãîëüíàÿ ôðàçà
+    //Глагольная фраза
     this.phrase = phrase;
-    //Îáúåêò Jsplumb
+    //Объект Jsplumb
     this.jsPlumbConn = conn;
 }
 
@@ -224,7 +224,7 @@ Repository.prototype.Delete_Attribute = function (idAtr) {
 
 
 };
-/*Äîáàâëåíèå îòíîøåíèÿ*/
+/*Добавление отношения*/
 Repository.prototype.Add_Relationship = function (desription, parentId, childId, type, phrase, conn) {
     this.list_rel.add(new Relationship(desription, parentId, childId, type, phrase, conn));
 };
@@ -381,11 +381,12 @@ Repository.prototype.Add_Group = function (nameKg, entId, typeKg,atrId) {
         this.Add_Component(newGroupItem.name_kg, newGroupItem.id);
     }
 }
-/*Äîáàâëåíèå êîìïîíåíòà*/
+/*Добавление компонента*/
 Repository.prototype.Add_Component = function (nameKg, attributeId) {
     return this.list_comp.add(new Component(nameKg, attributeId)).data;
 }
-/*Óäàëåíèå ãðóïïû*/
+/*
+Удаление группы*/
 Repository.prototype.Delete_Group = function (idGroup) {
     var groupToDelete = this.list_keygroup.searchById(idGroup);
     for (var i = 1; i <= this.list_comp._length; i++) {

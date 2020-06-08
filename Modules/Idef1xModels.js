@@ -102,19 +102,24 @@ function Relationship(description, parentId, childId, type, phrase, conn) {
     this.getId = function () {
         return _id;
     }
+    //получить ID родителя
     this.Get_Parent_ID = function () {
         return _parent_id;
     }
+    //получить ID потомка
     this.Get_Child_ID = function () {
         return _child_id;
     }
+    //Пока не понятно,что имел ввиду автор,какая-то информационная строка
     this.Get_Phrase = function () {
         return phrase;
     }
+    //описание
     this.Get_Description = function () {
         return description;
     }
 }
+//группировка массива  объектов по ключу
 function KeyGroup(nameKg, entId, typeKg) {
     //Èä ãðóïïû
     this.id = KeyGroup.counter++;
@@ -137,6 +142,7 @@ function Component(nameKg, attributeId) {
     //Èä àòðèáóòà
     this.atr_id = attributeId;
 }
+//получение ID
 Component.prototype.getId = function () {
     return this.id;
 }
